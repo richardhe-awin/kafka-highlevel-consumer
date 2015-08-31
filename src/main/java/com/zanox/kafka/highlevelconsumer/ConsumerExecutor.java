@@ -1,41 +1,34 @@
 package com.zanox.kafka.highlevelconsumer;
 
 import kafka.consumer.KafkaStream;
-import kafka.javaapi.consumer.ConsumerConnector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class ConsumerExecutor {
-    private final String topic;
-    private final ConsumerConnector consumerConnector;
     private ConsumerFactory consumerFactory;
-    private ExecutorService executorService;
+    private MessageStreamFactory messageStreamFactory;
+    private ExecutorServiceFactory executorServiceFactory;
 
-    public ConsumerExecutor(String topic,
-                            ConsumerConnector consumerConnector,
-                            ConsumerFactory consumerFactory) {
-        this.topic = topic;
-        this.consumerConnector = consumerConnector;
+    public ConsumerExecutor(ConsumerFactory consumerFactory,
+                            MessageStreamFactory messageStreamFactory,
+                            ExecutorServiceFactory executorServiceFactory) {
         this.consumerFactory = consumerFactory;
+        this.messageStreamFactory = messageStreamFactory;
+        this.executorServiceFactory = executorServiceFactory;
     }
 
     public Collection<Future> run(int numThreads) {
-        Map<String, Integer> topicCountMap = new HashMap<>();
-        System.out.println("create consumer map with topic: " + topic + " with " + numThreads + " threads");
-        topicCountMap.put(topic, numThreads);
-        Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumerConnector.createMessageStreams(topicCountMap);
-        List<KafkaStream<byte[], byte[]>> streams = consumerMap.get(topic);
-
-        executorService = Executors.newFixedThreadPool(numThreads);
 
         int threadNumber = 0;
+        ExecutorService executorService = executorServiceFactory.create(numThreads);
         Collection<Future> futureSubmissions = new ArrayList<>();
-        for (final KafkaStream<byte[], byte[]> stream : streams) {
+        for (final KafkaStream<byte[], byte[]> stream : messageStreamFactory.create(numThreads)) {
             System.out.println("executing thread " + threadNumber);
-            futureSubmissions.add(executorService.submit(consumerFactory.create(stream, threadNumber)));
+            futureSubmissions
+                    .add(executorService.submit(consumerFactory.create(stream, threadNumber)));
             threadNumber++;
         }
 

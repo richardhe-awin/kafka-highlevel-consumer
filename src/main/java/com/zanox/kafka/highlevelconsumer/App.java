@@ -25,8 +25,10 @@ public class App {
         ConsumerConfig consumerConfig = ConsumerConfigFactory.create(zookeeper, groupId);
         ConsumerConnector consumerConnector = new ConsumerConnectorFactory(consumerConfig).create();
 
-
-        ConsumerExecutor consumerExecutor = new ConsumerExecutor(topic, consumerConnector, new TestConsumerFactory());
+        ConsumerExecutor consumerExecutor = new ConsumerExecutor(
+                new TestConsumerFactory(),
+                new MessageStreamFactory(topic, consumerConnector),
+                new ExecutorServiceFactory());
         Collection<Future> futureSessions = consumerExecutor.run(numTheads);
 
         Iterator<Future> iterator = futureSessions.iterator();
