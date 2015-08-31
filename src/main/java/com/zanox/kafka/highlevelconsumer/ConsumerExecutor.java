@@ -37,17 +37,5 @@ public class ConsumerExecutor {
 
         return futureSubmissions;
     }
-//
-//    public void shutdown() {
-//        if (consumerConnector != null) consumerConnector.shutdown();
-//        if (executorService != null) executorService.shutdown();
-//        try {
-//            if (executorService != null && !executorService.awaitTermination(5000, TimeUnit.MILLISECONDS)) {
-//                System.out.println("Timed out waiting for consumer threads to shut down, exiting uncleanly");
-//            }
-//        } catch (InterruptedException e) {
-//            System.out.println("Interrupted during shutdown, exiting uncleanly");
-//        }
-//    }
 
 }
