@@ -11,11 +11,15 @@ import java.util.concurrent.Future;
 public class ConsumerExecutor {
     private final String topic;
     private final ConsumerConnector consumerConnector;
+    private ConsumerFactory consumerFactory;
     private ExecutorService executorService;
 
-    public ConsumerExecutor(String topic, ConsumerConnector consumerConnector) {
+    public ConsumerExecutor(String topic,
+                            ConsumerConnector consumerConnector,
+                            ConsumerFactory consumerFactory) {
         this.topic = topic;
         this.consumerConnector = consumerConnector;
+        this.consumerFactory = consumerFactory;
     }
 
     public Collection<Future> run(int numThreads) {
@@ -29,9 +33,9 @@ public class ConsumerExecutor {
 
         int threadNumber = 0;
         Collection<Future> futureSubmissions = new ArrayList<>();
-        for (final KafkaStream stream : streams) {
+        for (final KafkaStream<byte[], byte[]> stream : streams) {
             System.out.println("executing thread " + threadNumber);
-            futureSubmissions.add(executorService.submit(new ConsumerTest(stream, threadNumber)));
+            futureSubmissions.add(executorService.submit(consumerFactory.create(stream, threadNumber)));
             threadNumber++;
         }
 

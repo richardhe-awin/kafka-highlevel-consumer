@@ -26,7 +26,7 @@ public class App {
         ConsumerConnector consumerConnector = new ConsumerConnectorFactory(consumerConfig).create();
 
 
-        ConsumerExecutor consumerExecutor = new ConsumerExecutor(topic, consumerConnector);
+        ConsumerExecutor consumerExecutor = new ConsumerExecutor(topic, consumerConnector, new TestConsumerFactory());
         Collection<Future> futureSessions = consumerExecutor.run(numTheads);
 
         Iterator<Future> iterator = futureSessions.iterator();

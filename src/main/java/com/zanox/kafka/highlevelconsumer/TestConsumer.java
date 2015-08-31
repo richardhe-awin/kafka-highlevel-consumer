@@ -3,12 +3,12 @@ package com.zanox.kafka.highlevelconsumer;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 
-public class ConsumerTest implements Runnable {
+public class TestConsumer implements Consumer {
 
     private final KafkaStream stream;
     private final int threadNumber;
 
-    public ConsumerTest(KafkaStream<byte[], byte[]> stream, int threadNumber) {
+    public TestConsumer(KafkaStream<byte[], byte[]> stream, int threadNumber) {
         System.out.println("stream: " + stream);
         this.stream = stream;
         this.threadNumber = threadNumber;
