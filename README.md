@@ -6,7 +6,7 @@ An implementation of the high level kafka consumer
 mvn package && java -cp target/highlevelconsumer.jar com.zanox.kafka.highlevelconsumer.App {zookeeper} {group-id} {topic} {num-of-threads}
 ```
 
-**{zookeeper}** - zookeeper host, e.g. localhost:2181  
+**{zookeeper}** - zookeeper host (without the port number), e.g. localhost   
 **{group-id}** - consumer group id   
 **{topic}** - name of the topic  
 **{num-of-threads}** - number of threads to use for the consumer. If you specify more threads than the number of Kafka partitions, some of the threads won't be doing anything because Kafka never allow a single partition to be consumed from more than one thread.  
